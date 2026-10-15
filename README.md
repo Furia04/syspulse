@@ -87,34 +87,34 @@ SysPulse implementa un modelo de comunicación inter-procesos (*IPC*) híbrido y
 ```mermaid
 flowchart TD
     subgraph Rust_Backend["Rust Backend (Tauri v2 Core)"]
-        SYS[sysinfo crate\nTelemetría de Hardware]
-        DIAG[netstat & sockets\nPuertos & Latencia]
-        TH[Worker Thread en Background\nTick cada 1000ms]
-        IPC_STREAM[Tauri Event Channel\n'metrics-stream']
-        IPC_CMD[Tauri Commands\nkill_process, ping, export_report]
-        TRAY[System Tray & Notification Plugin]
+        SYS["sysinfo crate<br/>Telemetría de Hardware"]
+        DIAG["netstat & sockets<br/>Puertos & Latencia"]
+        TH["Worker Thread en Background<br/>Tick cada 1000ms"]
+        IPC_STREAM["Tauri Event Channel<br/>metrics-stream"]
+        IPC_CMD["Tauri Commands<br/>kill_process, ping, export_report"]
+        TRAY["System Tray & Notification Plugin"]
     end
 
     subgraph Svelte_Frontend["Frontend (Svelte 5 + Runes + Tailwind CSS)"]
-        LISTEN[listen('metrics-stream')]
+        LISTEN["listen('metrics-stream')"]
         STATE["Svelte 5 Runes ($state, $derived)"]
-        DASH[Dashboard en Vivo]
-        PROCS[Administrador de Procesos]
-        PORTS[Auditor de Puertos]
-        EXPORT[Exportador HTML / JSON]
+        DASH["Dashboard en Vivo"]
+        PROCS["Administrador de Procesos"]
+        PORTS["Auditor de Puertos"]
+        EXPORT["Exportador HTML / JSON"]
     end
 
     TH --> SYS
-    TH -->|Streaming asíncrono sin bloqueo| IPC_STREAM
+    TH -->|"Streaming asíncrono sin bloqueo"| IPC_STREAM
     IPC_STREAM --> LISTEN
     LISTEN --> STATE
     STATE --> DASH
-    PROCS -->|invoke('kill_process')| IPC_CMD
-    PORTS -->|invoke('get_open_ports')| IPC_CMD
-    EXPORT -->|invoke('export_system_report')| IPC_CMD
+    PROCS -->|"invoke('kill_process')"| IPC_CMD
+    PORTS -->|"invoke('get_open_ports')"| IPC_CMD
+    EXPORT -->|"invoke('export_system_report')"| IPC_CMD
     IPC_CMD --> SYS
     IPC_CMD --> DIAG
-    TRAY -.->|Control de visibilidad| Svelte_Frontend
+    TRAY -.->|"Control de visibilidad"| Svelte_Frontend
 ```
 
 ---
